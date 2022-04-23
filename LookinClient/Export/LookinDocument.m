@@ -41,9 +41,11 @@
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError {    
     NSError *unarchiveError = nil;
-    LookinHierarchyFile *hierarchyFile = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:&unarchiveError];
+    LookinHierarchyFile *hierarchyFile = [NSKeyedUnarchiver unarchivedObjectOfClass:LookinHierarchyFile.class fromData:data error:&unarchiveError];
     
     if (unarchiveError) {
+        NSLog(@"%@", unarchiveError);
+        NSAssert(NO, @"存在没列到 unarchivedClasses 里的 Class，解码失败，请查看 Xcode 控制台输出的信息。");
         if (outError) {
             *outError = unarchiveError;
         }

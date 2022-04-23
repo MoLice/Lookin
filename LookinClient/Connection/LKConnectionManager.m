@@ -10,6 +10,7 @@
 #import "Lookin_PTChannel.h"
 #import "LookinDefines.h"
 #import "LookinConnectionResponseAttachment.h"
+#import "LookinHierarchyFile.h"
 #import "LKPreferenceManager.h"
 #import "LookinAppInfo.h"
 #import "LKConnectionRequest.h"
@@ -457,9 +458,10 @@ static NSIndexSet * PushFrameTypeList() {
     if ([PushFrameTypeList() containsIndex:type]) {
         NSData *data = [NSData dataWithContentsOfDispatchData:payload.dispatchData];
         NSError *unarchiveError = nil;
-        NSObject *unarchivedData = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:&unarchiveError];
+        NSObject *unarchivedData = [NSKeyedUnarchiver unarchivedObjectOfClass:LookinHierarchyFile.class fromData:data error:&unarchiveError];
         if (unarchiveError) {
-            //        NSAssert(NO, @"");
+            NSLog(@"%@", unarchiveError);
+            NSAssert(NO, @"存在没列到 unarchivedClasses 里的 Class，解码失败，请查看 Xcode 控制台输出的信息。");
         }
         
         RACTuple *tuple = [RACTuple tupleWithObjects:channel, @(type), unarchivedData, nil];
@@ -478,9 +480,34 @@ static NSIndexSet * PushFrameTypeList() {
 
     NSData *data = [NSData dataWithContentsOfDispatchData:payload.dispatchData];
     NSError *unarchiveError = nil;
-    LookinConnectionResponseAttachment *attachment = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:&unarchiveError];
+    NSSet<Class> *unarchivedClasses = [NSSet setWithArray:@[
+        LookinImage.class,
+        LookinColor.class,
+        NSString.class,
+        NSNumber.class,
+        NSValue.class,
+        NSError.class,
+        NSArray.class,
+        NSMutableData.class,
+        
+        NSClassFromString(@"LookinObject"),
+        NSClassFromString(@"LookinDisplayItem"),
+        NSClassFromString(@"LookinIvarTrace"),
+        NSClassFromString(@"LookinEventHandler"),
+        NSClassFromString(@"LookinStringTwoTuple"),
+        NSClassFromString(@"LookinDisplayItemDetail"),
+        NSClassFromString(@"LookinAttribute"),
+        NSClassFromString(@"LookinAttributesGroup"),
+        NSClassFromString(@"LookinAttributesSection"),
+        NSClassFromString(@"LookinAutoLayoutConstraint"),
+        NSClassFromString(@"LookinAppInfo"),
+        NSClassFromString(@"LookinConnectionAttachment"),
+        NSClassFromString(@"LookinHierarchyInfo"),
+    ]];
+    LookinConnectionResponseAttachment *attachment = [NSKeyedUnarchiver unarchivedObjectOfClasses:unarchivedClasses fromData:data error:&unarchiveError];
     if (unarchiveError) {
-//        NSAssert(NO, @"");
+        NSLog(@"%@", unarchiveError);
+        NSAssert(NO, @"存在没列到 unarchivedClasses 里的 Class，解码失败，请查看 Xcode 控制台输出的信息。");
     }
     
     if (attachment.appIsInBackground) {

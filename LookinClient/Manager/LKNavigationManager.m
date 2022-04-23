@@ -105,7 +105,7 @@
         return NO;
     }
     
-    id dataObj = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:error];
+    id dataObj = [NSKeyedUnarchiver unarchivedObjectOfClass:LookinHierarchyFile.class fromData:data error:error];
     if (!dataObj) {
         // 比如拖了一个 pdf 格式的文件进来就会走到这里
         if (error) {
