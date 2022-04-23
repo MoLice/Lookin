@@ -20,7 +20,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   LookinShared:
-    :commit: 8d4d5fcac19eb83aa518b25e85074eaf0a63b11d
+    :commit: 992081dbe67cf609c38d814d398bec68d7f64ac2
     :git: https://github.com/QMUI/LookinServer.git
 
 SPEC CHECKSUMS:
@@ -30,4 +30,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: f8aee216c2e35ae96b243f2de8686c8c9589449a
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3
